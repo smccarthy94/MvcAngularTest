@@ -1,0 +1,140 @@
+﻿<article ng-controller="memberLister">
+    <header>
+        <h1>Members list</h1>
+    </header>
+    <section ng-show="Members.length > 0">
+        <div class="row">
+            <div class="col-md-6">
+                <input type="text"
+                        class="form-control"
+                        ng-model="FilterString"
+                        ng-model-options="{ debounce: 500 }"
+                        placeholder="Type in text to filter by..." />
+                <hr />
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Is Admin</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Website</th>
+                        <th>Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="m in Members | filter: FilterString">
+                        <td>{{ m.Id }}</td>
+                        <td>{{ m.FirstName }} {{ m.LastName }}</td>
+                        <td><i class="glyphicon" ng-class="{ true: 'glyphicon-ok', false: 'glyphicon-remove' }[m.IsAdministrator]"></i></td>
+                        <td><a ng-href="mailto:{{ m.Email }}">{{ m.Email }}</a></td>
+                        <td><a ng-href="tel:{{ m.Phone }}">{{ m.Phone }}</a></td>
+                        <td><a ng-href="{{ m.WebSite }}" target="_blank">Click to view</a></td>
+                        <td>{{ m.CreatedDate | date: 'short' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr />
+    </section>
+    <section ng-hide="Members.length > 0">
+        No members added yet.. Fill in the form below to create some.
+        <hr />
+    </section>
+    <header>
+        <h2>Add Member</h2>
+    </header>
+    <section>
+        <form class="form-horizontal" ng-submit="AddMember(NewMember)" name="newForm">
+
+            {{ newMemberForm | json }}
+
+            <div class="form-group">
+                <label for="inputEmail" class="col-sm-2 control-label">First Name</label>
+                <div class="col-sm-10">
+                    <input type="text"
+                           ng-model="NewMember.FirstName"
+                           ng-required="true"
+                           ng-disabled="IsBusy == true"
+                           class="form-control"
+                           id="inputFirstName"
+                           placeholder="First Name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputEmail" class="col-sm-2 control-label">Last Name</label>
+                <div class="col-sm-10">
+                    <input type="text"
+                           ng-model="NewMember.LastName"
+                           ng-required="true"
+                           ng-disabled="IsBusy == true"
+                           class="form-control"
+                           id="inputLastName"
+                           placeholder="Last Name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputEmail" class="col-sm-2 control-label">Email</label>
+                <div class="col-sm-10">
+                    <input type="email"
+                           ng-model="NewMember.Email"
+                           ng-required="true"
+                           ng-disabled="IsBusy == true"
+                           class="form-control"
+                           id="inputEmail"
+                           placeholder="email@address.com.au">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword" class="col-sm-2 control-label">Phone</label>
+                <div class="col-sm-10">
+                    <input type="tel"
+                           ng-model="NewMember.Phone"
+                           ng-required="true"
+                           ng-disabled="IsBusy == true"
+                           pattern="^\d*$"
+                           class="form-control"
+                           id="inputPassword"
+                           placeholder="0712345678">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputWebsite" class="col-sm-2 control-label">Web Site</label>
+                <div class="col-sm-10">
+                    <input type="url"
+                           ng-model="NewMember.WebSite"
+                           ng-required="true"
+                           ng-disabled="IsBusy == true"
+                           class="form-control"
+                           id="inputWebsite"
+                           placeholder="http://website.com.au/">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox"
+                                   ng-model="NewMember.IsAdministrator"
+                                   ng-disabled="IsBusy == true">
+                            Is Administrator
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button ng-disabled="IsBusy == true || newForm.$invalid == true || newForm.$pristine == true"
+                            type="submit"
+                            class="btn btn-default">
+                        Add
+                    </button>
+                </div>
+            </div>
+        </form>
+    </section>
+</article>
