@@ -9,9 +9,9 @@
 
         // define refresh members function on the scope so it can be called from the view.
         $scope.RefreshMembersList = function () {
-            
+
             // to be consumed by the markup so certain elements can be disabled while requests are in progress.
-            $scope.Busy = true; 
+            $scope.Busy = true;
 
             members.list().then(function (response) {
                 $scope.Members = response.data;
@@ -24,23 +24,23 @@
 
         // define add member function on the scope so it can be called from the view.
         $scope.AddMember = function (member) {
-            
+
             // to be consumed by the markup so certain elements can be disabled while requests are in progress.
             $scope.Busy = true;
-            
+
             // proactively insert the row - makes the app looks faster :)
-            $scope.Members.push(member); 
+            $scope.Members.push(member);
 
             members.create(member).then(function (response) {
                 $scope.Busy = false;
-                
+
                 // remove and re-add the record, it will have an ID and created date now.
-                $scope.Members.pop(); 
+                $scope.Members.pop();
                 $scope.Members.push(response.data);
-                
+
                 // clear the object used by the page form.
                 $scope.NewMember = {};
-                
+
                 // set the form in the view to $pristine state
                 $scope.newForm.$setPristine();
                 // this tells the form that it should appear as untouched, without this line all fields within
